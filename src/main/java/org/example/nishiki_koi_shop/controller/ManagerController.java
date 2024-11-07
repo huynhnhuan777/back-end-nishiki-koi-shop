@@ -3,12 +3,8 @@ package org.example.nishiki_koi_shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.nishiki_koi_shop.model.dto.*;
-import org.example.nishiki_koi_shop.model.entity.FishType;
 import org.example.nishiki_koi_shop.model.payload.*;
 import org.example.nishiki_koi_shop.service.*;
-import org.example.nishiki_koi_shop.service.impl.FarmServiceImpl;
-import org.example.nishiki_koi_shop.service.impl.FishServiceImpl;
-import org.example.nishiki_koi_shop.service.impl.TourServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +23,10 @@ public class ManagerController {
     private final FishService fishService;
     private final FarmService farmService;
     private final FishTypeService fishTypeService;
-    private final TourServiceImpl tourServiceImpl;
+    private final TourService tourService;
+    private final OrderFishService orderFishService;
+    private final OrderFishDetailService orderFishDetailService;
+    private final FeedBackService feedBackService;
 
     @GetMapping("/myInfo")
     public ResponseEntity<UserDto> getMyInfo() {
@@ -105,6 +104,35 @@ public class ManagerController {
         OrderTourDetailDto updatedDetail = orderTourDetailService.updateOrderTourDetail(id, form);
         return new ResponseEntity<>(updatedDetail, HttpStatus.OK);
     }
+    // OrderFish
+
+    @GetMapping("/order-fishes/get-all-order-fishes")
+    public ResponseEntity<List<OrderFishDto>> getAllOrderFishes() {
+        return new ResponseEntity<>(orderFishService.getAllOrderFishes(), HttpStatus.OK);
+    }
+
+    @GetMapping("/order-fishes/{id}")
+    public ResponseEntity<OrderFishDto> getOrderFishById(@PathVariable long id) {
+        return new ResponseEntity<>(orderFishService.getOrderFishById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/order-fishes/update/{id}")
+    public ResponseEntity<OrderFishDto> updateOrderFish(@PathVariable long id, @RequestBody OrderFishForm orderFishForm) {
+        return new ResponseEntity<>(orderFishService.updateOrderFish(id, orderFishForm), HttpStatus.OK);
+    }
+    //OrderFishDetail
+    @GetMapping("/order-fishes/order-fishes-detail/{id}")
+    public ResponseEntity<OrderFishDetailDto> getOrderFishDetailById(@PathVariable("id") long id){
+        return new ResponseEntity<>(orderFishDetailService.getOrderFishDetailById(id),HttpStatus.OK);
+    };
+    @GetMapping("/order-fishes/order-fishes-detail")
+    public ResponseEntity<List<OrderFishDetailDto>> getAllOrderFishDetails() {
+        return new ResponseEntity<>(orderFishDetailService.getAllOrderFishDetails(),HttpStatus.OK);
+    }
+    @PutMapping("/order-fishes/order-fishes-detail/update/{id}")
+    public ResponseEntity<OrderFishDetailDto> updateOrderFishDetail(@PathVariable("id") long id,@RequestBody OrderFishDetailForm orderFishDetailForm){
+        return new ResponseEntity<>(orderFishDetailService.updateOrderFishDetail(id,orderFishDetailForm), HttpStatus.OK);
+    };
 
     // Fish
     // Create
@@ -130,7 +158,7 @@ public class ManagerController {
 
     // Update
     @PutMapping("/fish/update/{id}")
-    public ResponseEntity<FishDto> updateFish(@PathVariable("id") Long id, @RequestBody FishForm fishForm) {
+    public ResponseEntity<FishDto> updateFish(@PathVariable("id") Long id, @ModelAttribute FishForm fishForm) {
         FishDto updatedFish = fishService.updateFish(id, fishForm);
         return ResponseEntity.ok(updatedFish);
     }
@@ -145,7 +173,7 @@ public class ManagerController {
     // farm
     // create
     @PostMapping("/farm/create-farm")
-    public ResponseEntity<FarmDto> createFarm(@RequestBody FarmForm farmForm) {
+    public ResponseEntity<FarmDto> createFarm(@ModelAttribute FarmForm farmForm) {
         FarmDto createFarm = farmService.createFarm(farmForm);
         return ResponseEntity.ok(createFarm);
     }
@@ -164,21 +192,44 @@ public class ManagerController {
         return ResponseEntity.ok(farmDto);
     }
 
+    @PutMapping("/farm/update/{id}")
+    public ResponseEntity<FarmDto> updateFarm(@PathVariable("id") Long id, @ModelAttribute FarmForm farmForm) {
+        return new ResponseEntity<>(farmService.updateFarm(id, farmForm), HttpStatus.OK);
+    }
+    @DeleteMapping("/farm/delete/{id}")
+    public ResponseEntity<Void> deleteFarm(@PathVariable Long id) {
+        farmService.deleteFarm(id);
+        return ResponseEntity.noContent().build();
+    }
+
     //tour
     //Create
     @PostMapping("/tour/create-tour")
     public ResponseEntity<TourDto> createTour(@ModelAttribute TourForm tourForm) {
-        TourDto createTour = tourServiceImpl.createTour(tourForm);
+        TourDto createTour = tourService.createTour(tourForm);
         return ResponseEntity.ok(createTour);
     }
 
     //Read(All)
     @GetMapping("/tour/get-all-tour")
     public ResponseEntity<List<TourDto>> getAllTour() {
-        List<TourDto> tourList = tourServiceImpl.getAllTour();
+        List<TourDto> tourList = tourService.getAllTour();
         return ResponseEntity.ok(tourList);
     }
+    @GetMapping("/tour/{id}")
+    public ResponseEntity<TourDto> getTourById(@PathVariable("id") long id) {
+        return new ResponseEntity<>(tourService.getTourById(id), HttpStatus.OK);
+    }
 
+    @PutMapping("tour/update/{id}")
+    public ResponseEntity<TourDto> updateTour(@PathVariable("id") long id, @ModelAttribute TourForm tourForm) {
+        return new ResponseEntity<>(tourService.updateTour(id,tourForm),HttpStatus.OK);
+    }
+    @DeleteMapping("/tour/delete/{id}")
+    public ResponseEntity<Void> deleteTour(@PathVariable Long id) {
+        tourService.deleteTour(id);
+        return ResponseEntity.noContent().build();
+    }
     // fish type
 
     @GetMapping("/fish-types/get-all-fish-types")
@@ -214,5 +265,23 @@ public class ManagerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    // feed back
+    @GetMapping("/feedbacks/get-all-feedback")
+    public ResponseEntity<List<FeedbackDto>> getAllFeedbacks(){
+        return new ResponseEntity<>(feedBackService.getAllFeedbacks(),HttpStatus.OK);
+    };
+    @GetMapping("/feedbacks/{id}")
+    public ResponseEntity<FeedbackDto> getFeedbackById(@PathVariable("id") long id){
+        return new ResponseEntity<>(feedBackService.getFeedbackById(id), HttpStatus.OK);
+    };
+    @PutMapping("/feedbacks/update/{id}")
+    public ResponseEntity<FeedbackDto> updateFeedback(@PathVariable("id") long id, @RequestBody FeedbackForm feedbackForm){
+        return new ResponseEntity<>(feedBackService.updateFeedback(id, feedbackForm), HttpStatus.OK);
+    };
+    @DeleteMapping("/feedbacks/delete/{id}")
+    public ResponseEntity<Void> deleteFeedback(@PathVariable("id") long id){
+        feedBackService.deleteFeedback(id);
+        return ResponseEntity.noContent().build();
+    };
 }
 

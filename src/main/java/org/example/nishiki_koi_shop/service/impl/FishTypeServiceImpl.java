@@ -70,10 +70,4 @@ public class FishTypeServiceImpl implements FishTypeService {
         return "Xóa Fish Type " + fishType.getName() + " thành công";
     }
 
-    @Override
-    public FishTypeDto getFishTypeByName(String name) {
-        return FishTypeDto.fromFishType(fishTypeRepository.findFishTypesByName(name)
-                .orElseThrow(() -> new RuntimeException("Fish type not found with name " + name)));
-    }
-
 }

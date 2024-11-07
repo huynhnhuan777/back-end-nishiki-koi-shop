@@ -15,7 +15,7 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initData(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (userRepository.findByUsername("Nguyen Lam").isEmpty()){
+            if (userRepository.findByEmail("lam1782004@gmail.com").isEmpty()){
                 Role userRole = roleRepository.findByName("ROLE_CUSTOMER")
                         .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_CUSTOMER").build()));
 
@@ -33,7 +33,7 @@ public class DataInitializer {
                 userRepository.save(user);
             }
 
-            if (userRepository.findByUsername("manager").isEmpty()) {
+            if (userRepository.findByEmail("manager@example.com").isEmpty()) {
                 Role managerRole = roleRepository.findByName("ROLE_MANAGER")
                         .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_MANAGER").build()));
 
@@ -52,7 +52,7 @@ public class DataInitializer {
             }
 
             // Create Sale Staff User
-            if (userRepository.findByUsername("sale_staff").isEmpty()) {
+            if (userRepository.findByEmail("salestaff@example.com").isEmpty()) {
                 Role saleStaffRole = roleRepository.findByName("ROLE_SALE_STAFF")
                         .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_SALE_STAFF").build()));
 
@@ -71,7 +71,7 @@ public class DataInitializer {
             }
 
             // Create Delivery Staff User
-            if (userRepository.findByUsername("delivery_staff").isEmpty()) {
+            if (userRepository.findByEmail("deliverystaff@example.com").isEmpty()) {
                 Role deliveryStaffRole = roleRepository.findByName("ROLE_DELIVERY_STAFF")
                         .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_DELIVERY_STAFF").build()));
 
@@ -90,7 +90,7 @@ public class DataInitializer {
             }
 
             // Create Consulting Staff User
-            if (userRepository.findByUsername("consulting_staff").isEmpty()) {
+            if (userRepository.findByEmail("consultingstaff@example.com").isEmpty()) {
                 Role consultingStaffRole = roleRepository.findByName("ROLE_CONSULTING_STAFF")
                         .orElseGet(() -> roleRepository.save(Role.builder().name("ROLE_CONSULTING_STAFF").build()));
 

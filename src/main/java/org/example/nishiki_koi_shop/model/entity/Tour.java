@@ -28,6 +28,7 @@ public class Tour {
     private LocalDate endDate;
     private long price;
     private Integer maxParticipants;
+    private String image;
 
     @Column(updatable = false)
     private LocalDate createdDate;

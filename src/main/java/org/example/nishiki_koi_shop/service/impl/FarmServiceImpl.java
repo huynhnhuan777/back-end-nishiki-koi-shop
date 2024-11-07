@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.nishiki_koi_shop.model.dto.FarmDto;
 import org.example.nishiki_koi_shop.model.entity.Farm;
 import org.example.nishiki_koi_shop.model.payload.FarmForm;
+import org.example.nishiki_koi_shop.model.payload.FishForm;
 import org.example.nishiki_koi_shop.repository.FarmRepository;
 import org.example.nishiki_koi_shop.service.FarmService;
 import org.springframework.stereotype.Service;
@@ -43,13 +44,32 @@ public class FarmServiceImpl implements FarmService {
     }
 
     @Override
-    public FarmDto updateFarm(FarmForm farmForm) {
-        return null;
-    }
-
-    @Override
     public FarmDto getFarmById(long id) {
         Farm farm = farmRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("ID nong trai khong ton tai"));
         return FarmDto.from(farm);
+    }
+
+    @Override
+    public FarmDto updateFarm(Long id, FarmForm farmForm) {
+        Farm farm = farmRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("ID farm khong ton tai"));
+
+        farm.setName(farmForm.getName());
+        farm.setDescription(farmForm.getDescription());
+        farm.setImage(farmForm.getImage());
+        farm.setContactInfo(farmForm.getContactInfo());
+        farm.setLocation(farmForm.getLocation());
+        farm.setCreatedDate(LocalDate.now());
+
+        farmRepository.save(farm);
+
+        return FarmDto.from(farm);
+    }
+
+    @Override
+    public void deleteFarm(Long id) {
+        Farm farm = farmRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("ID farm không tồn tại"));
+        farmRepository.delete(farm);
     }
 }

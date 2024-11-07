@@ -14,6 +14,7 @@ public class TourDto {
     private String TourDescription;
     private LocalDate TourStartDate;
     private LocalDate TourEndDate;
+    private String image;
     private int TourCapacity;
     private long TourPrice;
     private long farmId;
@@ -27,6 +28,7 @@ public class TourDto {
                 .TourEndDate(tour.getEndDate())
                 .TourCapacity(tour.getMaxParticipants())
                 .TourPrice(tour.getPrice())
+                .image(tour.getImage())
                 .farmId(tour.getFarm().getFarmId())
                 .build();
     }

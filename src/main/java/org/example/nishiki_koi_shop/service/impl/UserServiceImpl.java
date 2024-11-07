@@ -3,9 +3,11 @@ package org.example.nishiki_koi_shop.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.nishiki_koi_shop.model.dto.UserDto;
+import org.example.nishiki_koi_shop.model.entity.Role;
 import org.example.nishiki_koi_shop.model.entity.User;
 import org.example.nishiki_koi_shop.model.payload.ChangePasswordForm;
 import org.example.nishiki_koi_shop.model.payload.UserForm;
+import org.example.nishiki_koi_shop.repository.RoleRepository;
 import org.example.nishiki_koi_shop.repository.UserRepository;
 import org.example.nishiki_koi_shop.service.UserService;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public void softDeleteUser(Long id, Principal principal) {
@@ -117,7 +120,7 @@ public class UserServiceImpl implements UserService {
                 .map(UserDto::from)
                 .collect(Collectors.toList());
     }
-
+//
     @Override
     public UserDto updateUser(Long id, UserForm form) {
         User user = userRepository.findById(id)
@@ -126,12 +129,13 @@ public class UserServiceImpl implements UserService {
         if (user.getDeletedAt() != null) {
             throw new RuntimeException("User has been deleted");
         }
+        Role role = roleRepository.findByName(form.getRoleName()).orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.setFullName(form.getFullName());
         user.setAddress(form.getAddress());
-        user.setEmail(form.getEmail());
         user.setPhoneNumber(form.getPhoneNumber());
         user.setUsername(form.getUsername());
+        user.setRole(role);
 
         userRepository.save(user);
         log.info("User with ID {} updated successfully", id);
@@ -158,7 +162,6 @@ public class UserServiceImpl implements UserService {
         user.setPhoneNumber(form.getPhoneNumber());
         user.setAddress(form.getAddress());
         user.setUsername(form.getUsername());
-        user.setEmail(form.getEmail());
 
         // Lưu lại thay đổi vào cơ sở dữ liệu
         userRepository.save(user);

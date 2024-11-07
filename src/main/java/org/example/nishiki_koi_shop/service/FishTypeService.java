@@ -11,5 +11,4 @@ public interface FishTypeService {
     FishTypeDto createFishType(FishTypeForm fishTypeForm);
     FishTypeDto updateFishType(long id, FishTypeForm fishTypeForm);
     String deleteFishTypeById(long id);
-    FishTypeDto getFishTypeByName(String name);
 }

@@ -17,7 +17,7 @@ public class OrderFishDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long orderFishDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_fish_id", nullable = false)
     private OrderFish orderFish;
 

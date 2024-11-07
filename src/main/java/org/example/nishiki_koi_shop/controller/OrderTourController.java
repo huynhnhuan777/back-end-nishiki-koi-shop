@@ -19,7 +19,7 @@ public class OrderTourController {
     @Autowired
     private OrderTourService orderTourService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<OrderTourDto> createOrderTour(@RequestBody OrderTourForm orderTourForm, Principal principal) {
         OrderTourDto createdOrderTour = orderTourService.createOrderTour(orderTourForm, principal);
         return new ResponseEntity<>(createdOrderTour, HttpStatus.CREATED);

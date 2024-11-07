@@ -17,11 +17,11 @@ import java.time.LocalDate;
 public class FeedbackDto {
     private long feedbackId;
     private String comment;
-    private LocalDate createdDate;
     private long userId;
     private long tourId;
     private long fishId;
-    private String rating;
+    private Feedback.Rating rating;
+    private LocalDate createdDate;
 
     public static FeedbackDto from(Feedback feedback) {
         return FeedbackDto.builder()
@@ -31,7 +31,7 @@ public class FeedbackDto {
                 .userId(feedback.getUser().getUserId())
                 .tourId(feedback.getTour().getTourId())
                 .fishId(feedback.getFish().getFishId())
-                .rating(feedback.getRating().toString())
+                .rating(feedback.getRating())
                 .build();
     }
 }

@@ -10,6 +10,7 @@ import org.example.nishiki_koi_shop.repository.TourRepository;
 import org.example.nishiki_koi_shop.service.TourService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +31,41 @@ public class TourServiceImpl implements TourService {
                 .endDate(tourForm.getTourEndDate())
                 .price(tourForm.getTourPrice())
                 .farm(farm)
+                .image(tourForm.getTourImage())
                 .maxParticipants(tourForm.getTourCapacity())
                 .build();
         tour = tourRepository.save(tour);
         return TourDto.from(tour);
+    }
+
+    @Override
+    public TourDto getTourById(long id) {
+        Tour tour = tourRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tour"));
+        return TourDto.from(tour);
+    }
+
+    @Override
+    public TourDto updateTour(Long id, TourForm tourForm) {
+        Tour tour = tourRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tour"));
+
+        Farm farm = farmRepository.findById(tourForm.getFarmId()).orElseThrow(() -> new IllegalArgumentException("Khong tìm thây farm"));
+
+        tour.setName(tourForm.getTourName());
+        tour.setDescription(tourForm.getTourDescription());
+        tour.setStartDate(tourForm.getTourStartDate());
+        tour.setEndDate(tourForm.getTourEndDate());
+        tour.setPrice(tourForm.getTourPrice());
+        tour.setImage(tourForm.getTourImage());
+        tour.setCreatedDate(LocalDate.now());
+        tour.setFarm(farm);
+
+        return TourDto.from(tourRepository.save(tour));
+    }
+
+    @Override
+    public void deleteTour(Long id) {
+        Tour tour = tourRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tour"));
+        tourRepository.delete(tour);
     }
 
     @Override

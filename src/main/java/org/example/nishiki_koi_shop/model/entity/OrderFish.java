@@ -23,7 +23,6 @@ public class OrderFish {
     private long totalAmount;
     @Enumerated(EnumType.STRING)
     private Status status;
-    private LocalDate orderDate;
     private LocalDate deliveryDate;
     private String paymentMethod;
     private LocalDate createdDate;
@@ -36,6 +35,6 @@ public class OrderFish {
     @JoinColumn(name = "user_id", nullable = false) // Cột tham chiếu tới bảng User
     private User user;
 
-    @OneToMany(mappedBy = "orderFish", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Quan hệ với OrderFishDetail
-    private List<OrderFishDetail> orderFishDetail;
+    @OneToOne(mappedBy = "orderFish", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Quan hệ với OrderFishDetail
+    private OrderFishDetail orderFishDetail;
 }

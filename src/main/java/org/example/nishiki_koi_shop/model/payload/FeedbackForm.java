@@ -1,9 +1,17 @@
 package org.example.nishiki_koi_shop.model.payload;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.nishiki_koi_shop.model.entity.Feedback;
+import org.example.nishiki_koi_shop.model.entity.Fish;
+import org.example.nishiki_koi_shop.model.entity.Tour;
+import org.example.nishiki_koi_shop.model.entity.User;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,8 +20,9 @@ import lombok.Setter;
 public class FeedbackForm {
 
     private String comment;
-    private Long userId;
-    private Long tourId;
-    private Long fishId;
-    private String rating;
+    private long userId;
+    private long tourId;
+    private long fishId;
+    private Feedback.Rating rating;
+    private LocalDate createdDate;
 }
